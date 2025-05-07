@@ -55,7 +55,26 @@ def CommonCheck():
         else:
           print("Common Password not detected")
               
+def RepeatCheck():
+  prevc = ""
+  RCount = 1 
+  
+  for c in Password:
+    if c == prevc:
+      RCount += 1
+      if RCount >= 3:
+        print("Password characters repeated")
+        break
+    else:
+      RCount = 0
+    prevc = c
+  if RCount < 3:
+    print("Password characters not repeated") 
+
+
 LengthCheck()
 ComplexCheck()
 CommonCheck()
+RepeatCheck()
+
 

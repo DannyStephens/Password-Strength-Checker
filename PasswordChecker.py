@@ -1,9 +1,9 @@
 import string
 
-PLengthScore = 0  # Password length score 1-5=1 6-8=2 9-11=3 12-15=4 16+=5
-PComplexScore = 0  # Character variety (uppercase, lowercase, numbers, symbols)
-PCommonScore = 0   # No common passwords - Implement list of common passwords
-PRepeatedCScore = 0  # No repeated or sequential characters (like aaaa, 1234)
+PLengthScore = 0
+PComplexScore = 0
+PCommonScore = 0
+PRepeatedCScore = 0
 
 print("Password Strength Checker")
 Password = input("Enter your password to see how strong it is: ")
@@ -44,25 +44,40 @@ def ComplexCheck():
 
 def CommonCheck():
     global PCommonScore
-    common = 0
-    with open(r'Passwords.txt', 'r') as fp:
-        lines = fp.readlines()
+    min_score = 5      
+    with open(r'/content/drive/MyDrive/Passwords.txt', 'r') as fp:
+        lines = fp.readlines()        
         for row in lines:
-            if row.find(Password) != -1:
-              common = 1
-        
-        if common == 1:
-          print("Common Password detected")
-          PCommonScore = 0
-        else:
-          print("Common Password not detected")
-          PCommonScore = 1
-              
+            clean_row = row.strip()  
+            if Password == clean_row:
+                min_score = 0
+                PCommonScore = 1
+                break
+            else:  
+              if Password in clean_row:
+                  min_score = min(min_score, 1)
+                  PCommonScore = 2
+                  break
+              else:
+                PCommonScore = 3            
+    print(f"Password Commonness Score: {PCommonScore}/3")
+
+            
+          
+            
+
+
+# IMPROVEMENTS: No repeats (good) → score: 5
+# Minor repeats (e.g., 2–3 consecutive chars) → score: 4
+# More noticeable patterns (e.g., abababab) → score: 3
+# Strong repeats (e.g., aaaa, 1111) → score: 2
+# Severe repetition (e.g., aaaaaaa, 1234) → score: 1
+
 def RepeatCheck():
   global PRepeatedCScore
   prevc = ""
-  RCount = 1 
-  
+  RCount = 1
+
   for c in Password:
     if c == prevc:
       RCount += 1
@@ -74,7 +89,7 @@ def RepeatCheck():
       RCount = 1
     prevc = c
   if RCount < 3:
-    print("Password characters not repeated") 
+    print("Password characters not repeated")
     PRepeatedCScore = 1
 
 
@@ -86,5 +101,6 @@ RepeatCheck()
 total_score = PLengthScore + PComplexScore + PCommonScore + PRepeatedCScore
 max_score = 5 + 4 + 1 + 1
 print(f"\nTotal Password Strength Score: {total_score}/{max_score}")
+
 
 

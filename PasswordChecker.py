@@ -32,17 +32,18 @@ def ComplexCheck():
     score = 0
     if any(c.islower() for c in Password):
         score += 1
-    elif any(c.isupper() for c in Password):
+    if any(c.isupper() for c in Password):
         score += 1
-    elif any(c.isdigit() for c in Password):
+    if any(c.isdigit() for c in Password):
         score += 1
-    elif any(c in string.punctuation for c in Password):
+    if any(c in string.punctuation for c in Password):
         score += 1
 
     PComplexScore = score
     print(f"Password Complexity Score: {score}/4")
 
 def CommonCheck():
+    global PCommonScore
     common = 0
     with open(r'Passwords.txt', 'r') as fp:
         lines = fp.readlines()
@@ -52,10 +53,13 @@ def CommonCheck():
         
         if common == 1:
           print("Common Password detected")
+          PCommonScore = 0
         else:
           print("Common Password not detected")
+          PCommonScore = 1
               
 def RepeatCheck():
+  global PRepeatedCScore
   prevc = ""
   RCount = 1 
   
@@ -64,17 +68,23 @@ def RepeatCheck():
       RCount += 1
       if RCount >= 3:
         print("Password characters repeated")
+        PRepeatedCScore = 0
         break
     else:
-      RCount = 0
+      RCount = 1
     prevc = c
   if RCount < 3:
     print("Password characters not repeated") 
+    PRepeatedCScore = 1
 
 
 LengthCheck()
 ComplexCheck()
 CommonCheck()
 RepeatCheck()
+
+total_score = PLengthScore + PComplexScore + PCommonScore + PRepeatedCScore
+max_score = 5 + 4 + 1 + 1
+print(f"\nTotal Password Strength Score: {total_score}/{max_score}")
 
 

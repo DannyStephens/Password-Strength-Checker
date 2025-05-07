@@ -13,19 +13,19 @@ def LengthCheck():
     global PLengthScore
     if PLength <= 5:
         print("Password Length Score 1/5")
-        PLengthScore = 1    
+        PLengthScore = 1
     elif 6 <= PLength <= 8:
         print("Password Length Score 2/5")
-        PLengthScore = 2      
+        PLengthScore = 2
     elif 9 <= PLength <= 11:
         print("Password Length Score 3/5")
-        PLengthScore = 3      
+        PLengthScore = 3
     elif 12 <= PLength <= 15:
         print("Password Length Score 4/5")
-        PLengthScore = 4      
+        PLengthScore = 4
     elif PLength >= 16:
         print("Password Length Score 5/5")
-        PLengthScore = 5     
+        PLengthScore = 5
 
 def ComplexCheck():
     global PComplexScore
@@ -42,5 +42,20 @@ def ComplexCheck():
     PComplexScore = score
     print(f"Password Complexity Score: {score}/4")
 
+def CommonCheck():
+    common = 0
+    with open(r'Passwords.txt', 'r') as fp:
+        lines = fp.readlines()
+        for row in lines:
+            if row.find(Password) != -1:
+              common = 1
+        
+        if common == 1:
+          print("Common Password detected")
+        else:
+          print("Common Password not detected")
+              
 LengthCheck()
 ComplexCheck()
+CommonCheck()
+

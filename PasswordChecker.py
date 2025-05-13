@@ -1,4 +1,5 @@
 import string
+import getpass
 
 PLengthScore = 0
 PComplexScore = 0
@@ -6,25 +7,20 @@ PCommonScore = 0
 PRepeatedCScore = 0
 
 print("Password Strength Checker")
-Password = input("Enter your password to see how strong it is: ")
+Password = getpass.getpass("Enter your password to see how strong it is: ")
 PLength = len(Password)
 
 def LengthCheck():
     global PLengthScore
     if PLength <= 5:
-        print("Password Length Score 1/5")
         PLengthScore = 1
     elif 6 <= PLength <= 8:
-        print("Password Length Score 2/5")
         PLengthScore = 2
     elif 9 <= PLength <= 11:
-        print("Password Length Score 3/5")
         PLengthScore = 3
     elif 12 <= PLength <= 15:
-        print("Password Length Score 4/5")
         PLengthScore = 4
     elif PLength >= 16:
-        print("Password Length Score 5/5")
         PLengthScore = 5
 
 def ComplexCheck():
@@ -40,7 +36,6 @@ def ComplexCheck():
         score += 1
 
     PComplexScore = score
-    print(f"Password Complexity Score: {score}/4")
 
 def CommonCheck():
     global PCommonScore
@@ -54,13 +49,7 @@ def CommonCheck():
                 PCommonScore = 1
                 break
             else:
-              if Password in clean_row:
-                  min_score = min(min_score, 1)
-                  PCommonScore = 2
-                  break
-              else:
-                PCommonScore = 3
-    print(f"Password Commonness Score: {PCommonScore}/3")
+                PCommonScore = 2
 
 def RepeatCheck():
     global PRepeatedCScore
@@ -71,24 +60,24 @@ def RepeatCheck():
         if c == prev_char:
             RCount += 1
             if RCount >= 4:
-                print("Password Repeated Characters Score: 1/4")
+                # 4 characters repeated
                 PRepeatedCScore = 1
                 return
         else:
             RCount = 1
 
         if i >= 3 and Password[i-3] == Password[i-1] and Password[i-2] == Password[i]:
-            print("Password Repeated Characters Score: 2/4")
             PRepeatedCScore = 2
+            #similar characters repeated twice e.g. asas
             return
 
         prev_char = c
 
     if RCount == 3:
-        print("Password Repeated Characters Score: 3/4")
+        # 3 characters repeated
         PRepeatedCScore = 3
     else:
-        print("Password Repeated Characters Score: 4/4")
+        # no repeats
         PRepeatedCScore = 4
 
 
@@ -98,9 +87,28 @@ ComplexCheck()
 CommonCheck()
 RepeatCheck()
 
-total_score = PLengthScore + PComplexScore + PCommonScore + PRepeatedCScore
-max_score = 5 + 4 + 3 + 4
-print(f"\nTotal Password Strength Score: {total_score}/{max_score}")
 
+PLengthScore = PLengthScore*0.5
+PComplexScore = PComplexScore*0.35
+PRepeatedCScore = PRepeatedCScore*0.15
 
+print(f"Password Commonness Check: {PCommonScore}/2")
+
+print(f"Password Length Score: {PLengthScore}/2.5")
+print(f"Password Complexity Score: {PComplexScore}/1.4")
+print(f"Password Repeated Characters Score: {PRepeatedCScore}/0.6")
+
+total_score = PLengthScore + PComplexScore + PRepeatedCScore
+max_score = 2.5 + 1.4 + 0.6
+
+if PCommonScore == 1:
+  print("PASSWORD SECURITY: VERY WEAK - COMMON PASSWORD USED - EASILY BRUTEFORCABLE")
+elif total_score < 1.5 and PCommonScore == 2:
+    print("PASSWORD SECURITY: WEAK")
+elif 1.5 <= total_score < 3.0 and PCommonScore == 2:
+    print("PASSWORD SECURITY: OK")
+elif 3.0 <= total_score < 4.0 and PCommonScore == 2:
+    print("PASSWORD SECURITY: GOOD")
+elif 4.0 <= total_score <= 4.5 and PCommonScore == 2:
+    print("PASSWORD SECURITY: SECURE")
 
